@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="light" />
+  <title>Enabling MoE on the Edge via Importance-Driven Expert Scheduling</title>
+  <meta name="description" content="Importance-Driven Expert Scheduling for MoE LLM inference on memory-constrained edge GPUs (SMoE): substitution, caching, and CPU–GPU pipeline to reduce PCIe overhead and decoding latency." />
+
+  <!-- Social -->
+  <meta property="og:title" content="Enabling MoE on the Edge via Importance-Driven Expert Scheduling" />
+  <meta property="og:description" content="Substitute low-importance activated experts with functionally similar cached experts to reduce offloading and decoding latency on edge hardware." />
+  <!-- Optional: put a preview image here after you export figures -->
+  <!-- <meta property="og:image" content="assets/fig1.png" /> -->
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      /* Light theme (designed to match white-background figures) */
+      --bg: #ffffff;
+      --bg-2: #f6f7fb;
+      --card: rgba(17,24,39,.035);
+      --card-2: rgba(17,24,39,.055);
+      --stroke: rgba(17,24,39,.10);
+      --stroke-2: rgba(17,24,39,.14);
+      --text: #111827;
+      --muted: rgba(17,24,39,.72);
+      --muted-2: rgba(17,24,39,.56);
+      --shadow: 0 24px 60px rgba(17,24,39,.10);
+      --shadow-2: 0 12px 28px rgba(17,24,39,.10);
+      --accent: #6d5efc;
+      --accent-2: #10b981;
+      --accent-3: #3b82f6;
+      --accent-warm: #f59e0b;
+      --radius: 18px;
+      --radius-sm: 14px;
+      --max: 1100px;
+      --serif: "Source Serif 4", ui-serif, Georgia, serif;
+      --sans: "Inter", ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      --mono: "Source Code Pro", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+    }
+
+    *{ box-sizing: border-box; }
+    html,body{ height: 100%; }
+    body{
+      margin: 0;
+      color: var(--text);
+      font-family: var(--sans);
+      background:
+        radial-gradient(1100px 650px at 15% -10%, rgba(109,94,252,.14), transparent 60%),
+        radial-gradient(900px 600px at 90% 0%, rgba(59,130,246,.10), transparent 55%),
+        radial-gradient(900px 600px at 75% 110%, rgba(16,185,129,.09), transparent 60%),
+        linear-gradient(180deg, var(--bg), var(--bg-2));
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    a{ color: inherit; text-decoration: none; }
+    a:hover{ text-decoration: none; }
+
+    .container{
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 0 22px;
+    }
+
+    /* Top Nav */
+    .topbar{
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(14px);
+      background: rgba(255,255,255,.72);
+      border-bottom: 1px solid var(--stroke);
+    }
+    .topbar-inner{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 0;
+      gap: 16px;
+    }
+    .brand{
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 220px;
+    }
+    .mark{
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background:
+        radial-gradient(18px 18px at 28% 35%, rgba(255,255,255,.55), transparent 55%),
+        linear-gradient(135deg, rgba(109,94,252,1), rgba(59,130,246,1));
+      box-shadow: 0 14px 40px rgba(124,92,255,.25);
+      border: 1px solid rgba(17,24,39,.12);
+    }
+    .brand-title{
+      display: flex;
+      flex-direction: column;
+      line-height: 1.1;
+    }
+    .brand-title strong{ font-size: 13px; letter-spacing: .02em; }
+    .brand-title span{ font-size: 12px; color: var(--muted); }
+
+    .nav{
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .nav a{
+      font-size: 13px;
+      color: var(--muted);
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      transition: .18s ease;
+    }
+    .nav a:hover{
+      color: var(--text);
+      border-color: var(--stroke);
+      background: var(--card);
+    }
+    .nav a.active{
+      color: var(--text);
+      background: rgba(109,94,252,.10);
+      border-color: rgba(109,94,252,.28);
+    }
+
+    .cta{
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      justify-content: flex-end;
+      min-width: 220px;
+    }
+    .btn{
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(17,24,39,.12);
+      background: rgba(255,255,255,.78);
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: .01em;
+      transition: .18s ease;
+      box-shadow: 0 10px 24px rgba(0,0,0,.18);
+    }
+    .btn:hover{
+      transform: translateY(-1px);
+      border-color: rgba(17,24,39,.18);
+      background: rgba(255,255,255,.92);
+      box-shadow: var(--shadow-2);
+    }
+    .btn.primary{
+      border-color: rgba(109,94,252,.55);
+      background: linear-gradient(135deg, rgba(109,94,252,.95), rgba(59,130,246,.80));
+      color: #ffffff;
+      box-shadow: 0 16px 40px rgba(109,94,252,.18);
+    }
+    .btn.primary:hover{
+      box-shadow: 0 18px 46px rgba(124,92,255,.26);
+    }
+    .btn svg{ width: 15px; height: 15px; opacity: .92; }
+
+    /* Hero */
+    .hero{
+      padding: 70px 0 36px;
+    }
+    .hero-grid{
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 26px;
+      align-items: start;
+    }
+    .badge{
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid var(--stroke);
+      background: rgba(255,255,255,.70);
+      padding: 8px 12px;
+      border-radius: 999px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .badge .dot{
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--accent-2);
+      box-shadow: 0 0 0 6px rgba(52,211,153,.12);
+    }
+    h1{
+      font-size: clamp(34px, 4vw, 52px);
+      line-height: 1.06;
+      margin: 16px 0 16px;
+      letter-spacing: -0.03em;
+    }
+    .subtitle{
+      margin: 0 0 18px;
+      color: var(--muted);
+      font-size: 16px;
+      max-width: 60ch;
+    }
+    .authors{
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+      margin-top: 12px;
+    }
+    .authors strong{ color: var(--text); font-weight: 700; }
+    .hero-card{
+      border-radius: var(--radius);
+      border: 1px solid var(--stroke);
+      background: linear-gradient(180deg, rgba(255,255,255,.92), rgba(255,255,255,.72));
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .hero-card .top{
+      padding: 18px 18px 10px;
+      border-bottom: 1px solid var(--stroke);
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .hero-card .top strong{ font-size: 13px; letter-spacing: .02em; }
+    .hero-card .top span{ font-size: 12px; color: var(--muted); }
+    .metrics{
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      padding: 16px 18px 18px;
+    }
+    .metric{
+      padding: 14px 14px;
+      border-radius: var(--radius-sm);
+      background: var(--card);
+      border: 1px solid var(--stroke);
+    }
+    .metric .k{
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .metric .v{
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+    .metric .v small{
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--muted);
+      margin-left: 6px;
+    }
+    .metric .hint{
+      margin-top: 6px;
+      font-size: 12px;
+      color: var(--muted-2);
+    }
+    .spark{
+      height: 54px;
+      margin-top: 12px;
+      border-radius: 12px;
+      border: 1px solid var(--stroke);
+      background:
+        linear-gradient(90deg, rgba(109,94,252,.0) 0%, rgba(109,94,252,.22) 22%, rgba(59,130,246,.22) 55%, rgba(16,185,129,.18) 100%),
+        radial-gradient(80px 40px at 15% 50%, rgba(109,94,252,.26), transparent 60%),
+        radial-gradient(80px 40px at 55% 50%, rgba(59,130,246,.22), transparent 60%),
+        radial-gradient(80px 40px at 85% 50%, rgba(16,185,129,.18), transparent 60%),
+        rgba(17,24,39,.02);
+      opacity: .95;
+    }
+
+    /* Sections */
+    section{ padding: 46px 0; }
+    .section-head{
+      display:flex;
+      align-items:flex-end;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+    .section-head h2{
+      margin: 0;
+      font-size: 22px;
+      letter-spacing: -0.02em;
+    }
+    .section-head p{
+      margin: 0;
+      color: var(--muted);
+      font-family: var(--serif);
+      max-width: 70ch;
+      font-size: 15px;
+    }
+    .divider{
+      height: 1px;
+      background: linear-gradient(90deg, rgba(17,24,39,.0), rgba(17,24,39,.14), rgba(17,24,39,.0));
+      margin: 18px 0 0;
+    }
+
+    .panel{
+      border-radius: var(--radius);
+      border: 1px solid var(--stroke);
+      background: rgba(255,255,255,.75);
+      box-shadow: var(--shadow-2);
+      padding: 18px;
+    }
+
+    .abstract{
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 18px;
+      align-items: start;
+    }
+    .abstract p{
+      margin: 0;
+      color: rgba(17,24,39,.86);
+      font-family: var(--serif);
+      font-size: 16px;
+      text-align: justify;
+    }
+    .bullets{
+      display: grid;
+      gap: 10px;
+    }
+    .bullet{
+      padding: 12px 12px;
+      border-radius: 14px;
+      background: var(--card);
+      border: 1px solid var(--stroke);
+    }
+    .bullet strong{ display:block; font-size: 13px; letter-spacing: .02em; }
+    .bullet span{ display:block; margin-top: 6px; color: var(--muted); font-size: 13px; }
+
+    .grid-3{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+    .card{
+      padding: 16px;
+      border-radius: var(--radius);
+      border: 1px solid var(--stroke);
+      background: rgba(255,255,255,.75);
+      box-shadow: var(--shadow-2);
+      position: relative;
+      overflow: hidden;
+    }
+    .card::before{
+      content:"";
+      position:absolute;
+      inset: -40% -30%;
+      background:
+        radial-gradient(220px 160px at 35% 30%, rgba(124,92,255,.14), transparent 60%),
+        radial-gradient(240px 180px at 70% 55%, rgba(96,165,250,.11), transparent 60%),
+        radial-gradient(260px 200px at 30% 75%, rgba(52,211,153,.10), transparent 60%);
+      transform: rotate(8deg);
+      pointer-events:none;
+    }
+    .card > *{ position: relative; }
+    .card h3{
+      margin: 0 0 8px;
+      font-size: 15px;
+      letter-spacing: -0.01em;
+    }
+    .card p{
+      margin: 0;
+      color: var(--muted);
+      font-family: var(--serif);
+      font-size: 14px;
+    }
+    .tag{
+      display:inline-flex;
+      align-items:center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+    .tag .pill{
+      width: 26px;
+      height: 26px;
+      border-radius: 10px;
+      border: 1px solid var(--stroke);
+      background: rgba(255,255,255,.75);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .tag svg{ width: 14px; height: 14px; opacity: .9; }
+
+    /* Figures */
+    .figure-grid{
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 14px;
+    }
+    figure{
+      margin: 0;
+      border-radius: var(--radius);
+      border: 1px solid var(--stroke);
+      background: rgba(255,255,255,.78);
+      box-shadow: var(--shadow-2);
+      overflow: hidden;
+    }
+    figure .media{
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background:
+        radial-gradient(700px 260px at 30% 30%, rgba(109,94,252,.12), transparent 60%),
+        radial-gradient(600px 260px at 70% 50%, rgba(59,130,246,.10), transparent 60%),
+        linear-gradient(180deg, rgba(17,24,39,.02), rgba(17,24,39,.01));
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      position: relative;
+      padding: 12px;
+    }
+    figure .media img{
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      background: #ffffff;
+      border-radius: 12px;
+      border: 1px solid rgba(17,24,39,.10);
+      box-shadow: 0 10px 22px rgba(17,24,39,.08);
+    }
+    figure .placeholder{
+      position:absolute;
+      inset: 0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding: 18px;
+      text-align:center;
+      color: rgba(17,24,39,.72);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: .02em;
+    }
+    figcaption{
+      padding: 12px 14px 14px;
+      border-top: 1px solid var(--stroke);
+      color: var(--muted);
+      font-size: 13px;
+      font-family: var(--serif);
+    }
+    figcaption strong{ color: var(--text); font-family: var(--sans); font-size: 12px; letter-spacing: .02em; }
+    figcaption span{ display:block; margin-top: 6px; }
+
+    .span-7{ grid-column: span 7; }
+    .span-5{ grid-column: span 5; }
+    .span-6{ grid-column: span 6; }
+    .span-12{ grid-column: span 12; }
+
+    /* Split (text + figure) blocks for findings */
+    .split{
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      align-items: center;
+      margin-top: 18px;
+    }
+    .split.reverse{
+      grid-template-columns: 1fr 1fr;
+    }
+    .split.reverse .split-text{ order: 2; }
+    .split.reverse figure{ order: 1; }
+    .split-text{
+      padding: 16px;
+      border-radius: var(--radius);
+      border: 1px solid var(--stroke);
+      background: rgba(255,255,255,.70);
+      box-shadow: var(--shadow-2);
+    }
+    .split-text h4{
+      margin: 0 0 10px;
+      font-size: 15px;
+      letter-spacing: -0.01em;
+    }
+    .split-text p{
+      margin: 0;
+      color: var(--muted);
+      font-family: var(--serif);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+    .split figure .media{ min-height: 300px; }
+
+    /* Citation */
+    .bib{
+      font-family: var(--mono);
+      font-size: 13px;
+      background: rgba(17,24,39,.03);
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius);
+      padding: 16px;
+      overflow:auto;
+      white-space: pre;
+      color: rgba(17,24,39,.90);
+    }
+    .row{
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 10px;
+      margin: 0 0 10px;
+    }
+    .row strong{ font-size: 13px; letter-spacing: .02em; }
+
+    footer{
+      padding: 40px 0 60px;
+      color: var(--muted-2);
+      font-size: 12px;
+    }
+    .foot{
+      display:flex;
+      align-items:flex-start;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+      border-top: 1px solid var(--stroke);
+      padding-top: 22px;
+    }
+    .foot strong{ color: var(--text); }
+
+    @media (max-width: 980px){
+      .hero-grid{ grid-template-columns: 1fr; }
+      .abstract{ grid-template-columns: 1fr; }
+      .cta{ display: none; }
+      .brand{ min-width: unset; }
+    }
+    @media (max-width: 880px){
+      .grid-3{ grid-template-columns: 1fr; }
+      .span-7,.span-5,.span-6,.span-12{ grid-column: span 12; }
+    }
+    @media (max-width: 980px){
+      .split{ grid-template-columns: 1fr; }
+      .split.reverse .split-text{ order: 0; }
+      .split.reverse figure{ order: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="container">
+      <div class="topbar-inner">
+        <a class="brand" href="#top" aria-label="Home">
+          <div class="mark" aria-hidden="true"></div>
+          <div class="brand-title">
+            <strong>MoE-Edge · SMoE</strong>
+            <span>Importance-Driven Expert Scheduling</span>
+          </div>
+        </a>
+
+        <nav class="nav" aria-label="Sections">
+          <a href="#abstract">Abstract</a>
+          <a href="#motivation">Motivation</a>
+          <a href="#method">Method</a>
+          <a href="#results">Results</a>
+          <a href="#ascend">Ascend</a>
+          <a href="#citation">Citation</a>
+        </nav>
+
+        <div class="cta">
+          <a class="btn" href="https://arxiv.org/abs/2508.18983" target="_blank" rel="noreferrer">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M7 7h10v10H7z" stroke="currentColor" stroke-width="1.7" opacity=".9"/>
+              <path d="M9 5h10v10" stroke="currentColor" stroke-width="1.7" opacity=".9"/>
+            </svg>
+            arXiv
+          </a>
+          <a class="btn primary" href="https://arxiv.org/pdf/2508.18983" target="_blank" rel="noreferrer">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M7 3h7l3 3v15a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z" stroke="currentColor" stroke-width="1.7"/>
+              <path d="M14 3v4h4" stroke="currentColor" stroke-width="1.7"/>
+            </svg>
+            PDF
+          </a>
+          <a class="btn" href="https://github.com/goingshr-debug/SMoE" target="_blank" rel="noreferrer">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M9 19c-3 1-3-2-4-2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+              <path d="M15 19v-2.2c0-.7.2-1.2.6-1.6 2 .2 4-.5 4-4.2 0-1-.4-1.9-1-2.6.1-.3.5-1.2-.1-2.6 0 0-.8-.3-2.6 1a8.9 8.9 0 0 0-4.8 0c-1.8-1.3-2.6-1-2.6-1-.6 1.4-.2 2.3-.1 2.6-.6.7-1 1.6-1 2.6 0 3.7 2 4.4 4 4.2.3.3.5.7.6 1.2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M12 20c4 0 8-3 8-8a8 8 0 1 0-16 0c0 5 4 8 8 8z" stroke="currentColor" stroke-width="1.7" opacity=".35"/>
+            </svg>
+            Code
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main id="top">
+    <div class="container">
+
+      <header class="hero">
+        <div class="hero-grid">
+          <div>
+            <div class="badge">
+              <span class="dot" aria-hidden="true"></span>
+              <span>Edge MoE inference · Substitution + Scheduling · CPU–GPU Pipeline</span>
+            </div>
+
+            <h1>Enabling MoE on the Edge<br/>via Importance-Driven Expert Scheduling</h1>
+
+            <p class="subtitle">
+              On memory-constrained edge GPUs, we adopt an <strong>importance-driven</strong> policy to prioritize critical experts and <strong>substitute</strong> low-importance activated experts
+              with functionally similar experts already cached in GPU memory, reducing PCIe transfers and CPU computation to significantly improve decoding latency (TPOT).
+            </p>
+
+            <div class="authors">
+              <strong>Guoying Zhu</strong>, Meng Li, Haipeng Dai, Xuechen Liu, Weijun Wang, Keran Li, Jun Xiao, Ligeng Chen, Wei Wang<br/>
+              <span>State Key Laboratory for Novel Software Technology, Nanjing University · (collabs: Tsinghua University, Honor Device)</span>
+            </div>
+          </div>
+
+          <aside class="hero-card" aria-label="Highlights">
+            <div class="top">
+              <div>
+                <strong>Key claims</strong><br/>
+                <span>high-level summary</span>
+              </div>
+              <span style="color: var(--muted); font-size: 12px;">SMoE</span>
+            </div>
+            <div class="metrics">
+              <div class="metric">
+                <div class="k">Decoding latency</div>
+                <div class="v">-48%<small>TPOT</small></div>
+                <div class="hint">vs. SOTA baselines</div>
+                <div class="spark" aria-hidden="true"></div>
+              </div>
+              <div class="metric">
+                <div class="k">Cache hit rate</div>
+                <div class="v">≥60%<small>experts</small></div>
+                <div class="hint">with near-lossless accuracy</div>
+                <div class="spark" aria-hidden="true"></div>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </header>
+
+      <section id="abstract" aria-label="Abstract">
+        <div class="section-head">
+          <div>
+            <h2>Abstract</h2>
+            <p>MoE’s scaling benefits become an edge bottleneck under the “VRAM wall + PCIe transfer” constraint. We use importance-driven scheduling and substitution to keep inference on the GPU as much as possible.</p>
+          </div>
+        </div>
+        <div class="divider"></div>
+
+        <div class="panel abstract" style="margin-top: 16px;">
+          <div>
+            <p>
+              Mixture of Experts (MoE) scales large language models by activating only a small subset of experts per token. On consumer-grade edge hardware, however, limited VRAM forces frequent
+              expert movement between CPU and GPU, making PCIe transfers and CPU computation the dominant decoding bottlenecks. We propose <strong>Importance-Driven Expert Scheduling</strong>:
+              using expert importance scores to guide offloading, substituting low-importance activated experts with functionally similar experts already cached on the GPU, and improving reuse via
+              cache-aware scheduling. A fine-grained CPU–GPU pipeline further hides unavoidable loading costs. Experiments show up to a 48% reduction in decoding latency and an expert cache hit rate above 60%,
+              while preserving near-lossless accuracy.
+            </p>
+          </div>
+          <div class="bullets">
+            <div class="bullet">
+              <strong>Key observation</strong>
+              <span>Among activated experts, only a few have high scores (critical), while many have scores comparable to inactive experts and can be approximated by cached experts.</span>
+            </div>
+            <div class="bullet">
+              <strong>Core mechanism</strong>
+              <span>Turn low-score activations into “soft hits” via similarity-based substitution, reducing CPU-side compute and PCIe reads.</span>
+            </div>
+            <div class="bullet">
+              <strong>System design</strong>
+              <span>A fine-grained pipeline overlaps GPU computation with prefetching critical experts to keep compute units saturated.</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="motivation" aria-label="Motivation">
+        <div class="section-head">
+          <div>
+            <h2>Motivation</h2>
+            <p>Why edge MoE is hard: PCIe transfer dominates the latency.</p>
+          </div>
+        </div>
+        <div class="divider"></div>
+
+        <div class="grid-3" style="margin-top: 16px; grid-template-columns: 1.2fr 0.8fr; align-items: center;">
+          <div class="span-6" style="grid-column: span 1;">
+            <h3 style="margin-top:0; font-size:18px;">The "Memory Wall" Bottleneck</h3>
+            <p style="color:var(--muted); font-size:15px; line-height:1.7;">
+              On edge devices (e.g., NVIDIA A6000), fetching experts from CPU memory via PCIe is orders of magnitude slower than computing them on GPU.
+              As shown in the figure, the <strong>PCIe transfer time (orange)</strong> often exceeds the actual <strong>GPU computation time (blue)</strong> by a large margin.
+              To achieve real-time inference (low TPOT), optimizing compute is not enough—we must minimize these expensive transfers.
+            </p>
+          </div>
+          <figure class="span-6" style="grid-column: span 1;">
+            <div class="media">
+              <img src="assets/fig-bottleneck.png" alt="Bottleneck Analysis" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+              <div class="placeholder" style="display:none;">Image unavailable.</div>
+            </div>
+            <figcaption>
+              <strong>The Bottleneck</strong>
+              <span>PCIe transfer vs. GPU compute time.</span>
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section id="method" aria-label="Method">
+        <div class="section-head">
+          <div>
+            <h2>Method</h2>
+            <p>SMoE: Importance-Driven Scheduling with Substitution.</p>
+          </div>
+        </div>
+        <div class="divider"></div>
+
+        <div class="grid-3" style="margin-top: 16px;">
+          <div class="card">
+            <div class="tag">
+              <span class="pill" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M4 7h16M4 12h10M4 17h16" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+                </svg>
+              </span>
+              <span>1. Router</span>
+            </div>
+            <h3>Expert-Cache Router</h3>
+            <p>Distinguish critical vs. non-critical experts based on gating scores. Prioritize VRAM for critical ones.</p>
+          </div>
+          <div class="card">
+            <div class="tag">
+              <span class="pill" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M12 21a9 9 0 1 0-9-9" stroke="currentColor" stroke-width="1.7" opacity=".9"/>
+                </svg>
+              </span>
+              <span>2. Strategy</span>
+            </div>
+            <h3>Similarity-based Substitution</h3>
+            <p>If a non-critical expert is missing, don't fetch it. Substitute it with a functionally similar cached expert.</p>
+          </div>
+          <div class="card">
+            <div class="tag">
+              <span class="pill" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M7 7h10v10H7z" stroke="currentColor" stroke-width="1.7"/>
+                  <path d="M3 12h2M19 12h2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+                </svg>
+              </span>
+              <span>3. System</span>
+            </div>
+            <h3>CPU–GPU Pipeline</h3>
+            <p>Overlap the computation of cached experts with the prefetching of missing critical experts.</p>
+          </div>
+        </div>
+
+        <div class="figure-grid" style="margin-top: 24px;">
+          <!-- Side-by-side layout with fixed height for alignment -->
+          <figure class="span-7">
+            <div class="media" style="height: 380px;">
+              <img src="assets/fig1.png" alt="Framework Overview" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+              <div class="placeholder" style="display:none;">Image unavailable.</div>
+            </div>
+            <figcaption>
+              <strong>Framework Overview</strong>
+              <span>Substitution-aware scheduler: replace low-score experts, prefetch top-score ones.</span>
+            </figcaption>
+          </figure>
+          
+          <figure class="span-5">
+            <div class="media" style="height: 380px;">
+              <img src="assets/fig-pipeline.png" alt="Execution Pipeline" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+              <div class="placeholder" style="display:none;">Image unavailable.</div>
+            </div>
+            <figcaption>
+              <strong>Execution Pipeline</strong>
+              <span>Overlapping GPU compute, CPU offloading, and PCIe transfers.</span>
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section id="results" aria-label="Results">
+        <div class="section-head">
+          <div>
+            <h2>Key Findings</h2>
+            <p>How far can we reduce latency without hurting accuracy?</p>
+          </div>
+        </div>
+        <div class="divider"></div>
+
+        <div style="margin-top: 24px;">
+          <h3 style="font-size: 18px; margin-bottom: 12px; color: var(--text);">01. Does substitution significantly reduce decoding latency?</h3>
+          <p style="margin-bottom: 16px; color: var(--muted); max-width: 80ch;">
+            <strong>Yes, by nearly half.</strong> By substituting non-critical experts instead of loading them, SMoE avoids a massive amount of PCIe traffic.
+            Compared to state-of-the-art offloading baselines, our method achieves up to a <strong>48% reduction in TPOT</strong> (Time Per Output Token).
+          </p>
+          <div class="figure-grid">
+            <figure class="span-12">
+              <div class="media" style="min-height: 400px;">
+                <img src="assets/fig-latency.png" alt="Main Result" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                <div class="placeholder" style="display:none;">Image unavailable.</div>
+              </div>
+              <figcaption>
+                <strong>Decoding Latency (TPOT)</strong>
+                <span>Comparison across 5 workloads showing consistent speedups over baselines like MoE-Infinity and ProMoE.</span>
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+
+        <div style="margin-top: 50px;">
+          <h3 style="font-size: 18px; margin-bottom: 12px; color: var(--text);">02. Why does the speedup happen?</h3>
+          <p style="margin-bottom: 24px; color: var(--muted); max-width: 80ch;">
+            <strong>Because PCIe overhead is cut drastically.</strong> As shown below, TPOT is strongly correlated with PCIe time.
+            By maintaining a high <strong>cache hit rate (>60%)</strong> through substitution, we ensure that most activated experts are already on the GPU.
+          </p>
+
+          <!-- Alternating text + figure blocks (fills space and improves readability) -->
+          <div class="split">
+            <div class="split-text">
+              <h4>PCIe time directly translates to TPOT</h4>
+              <p>
+                In edge settings, expert offloading is dominated by PCIe transfer. This plot shows a strong correlation between PCIe time and TPOT,
+                explaining why reducing transfers yields immediate decoding speedups.
+              </p>
+            </div>
+            <figure>
+              <div class="media">
+                <img src="assets/fig-pcie-vs-tpot.png" alt="PCIe vs TPOT" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                <div class="placeholder" style="display:none;">Image unavailable.</div>
+              </div>
+              <figcaption>
+                <strong>PCIe vs. TPOT</strong>
+                <span>Lower PCIe time consistently maps to lower TPOT.</span>
+              </figcaption>
+            </figure>
+          </div>
+
+          <div class="split reverse">
+            <div class="split-text">
+              <h4>High cache hit rate keeps execution on GPU</h4>
+              <p>
+                SMoE maximizes the reuse ratio of GPU-cached experts. With substitution, many low-importance activations become “soft hits”,
+                so the GPU can execute most experts without waiting for CPU→GPU transfers.
+              </p>
+            </div>
+            <figure>
+              <div class="media">
+                <img src="assets/fig-hit-rate.png" alt="Cache hit rate" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                <div class="placeholder" style="display:none;">Image unavailable.</div>
+              </div>
+              <figcaption>
+                <strong>Cache Hit Rate</strong>
+                <span>Sustained high reuse ratio across settings.</span>
+              </figcaption>
+            </figure>
+          </div>
+
+          <div class="split">
+            <div class="split-text">
+              <h4>Substitution reduces the number of experts that must be loaded</h4>
+              <p>
+                The key is selectivity: only a few activated experts are truly critical (high-score). Low-score activated experts can be substituted
+                by functionally similar experts already in VRAM, so fewer experts need fetching and prefetching becomes lighter.
+              </p>
+            </div>
+            <figure>
+              <div class="media">
+                <img src="assets/fig-components-load.png" alt="Reduced load" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                <div class="placeholder" style="display:none;">Image unavailable.</div>
+              </div>
+              <figcaption>
+                <strong>Reduced Load</strong>
+                <span>Fewer experts need fetching from CPU memory.</span>
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+
+        <div style="margin-top: 50px;">
+          <h3 style="font-size: 18px; margin-bottom: 12px; color: var(--text);">03. Which component contributes the most?</h3>
+          <p style="margin-bottom: 16px; color: var(--muted); max-width: 80ch;">
+            <strong>Substitution is the key driver.</strong> The ablation study below shows that while the pipeline and prefetching help,
+            the substitution mechanism (orange bar segments) provides the most significant reduction in latency.
+          </p>
+          <div class="figure-grid" style="justify-content: center;">
+            <figure class="span-8" style="grid-column: 3 / 11;">
+              <div class="media" style="min-height: 350px;">
+                <img src="assets/fig-ablation.png" alt="Ablation Study" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                <div class="placeholder" style="display:none;">Image unavailable.</div>
+              </div>
+              <figcaption>
+                <strong>Component Ablation</strong>
+                <span>Breakdown of latency savings by component.</span>
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+
+        <div style="margin-top: 50px;">
+          <h3 style="font-size: 18px; margin-bottom: 12px; color: var(--text);">04. Is CPU compute a viable fallback at low batch?</h3>
+          <p style="margin-bottom: 16px; color: var(--muted); max-width: 80ch;">
+            <strong>Usually not.</strong> In low-batch edge serving, CPU compute can be significantly slower than GPU execution, and the system often becomes
+            dominated by memory movement and CPU-side compute stalls. This motivates keeping as much execution on GPU as possible.
+          </p>
+          <div class="split">
+            <div class="split-text">
+              <h4>GPU vs. CPU under low-batch serving</h4>
+              <p>
+                This comparison highlights the gap between GPU (A6000) and CPU (8-core) at low batch. SMoE’s goal is to avoid CPU-side expert execution whenever possible
+                by increasing GPU-resident “hits” (hard hits + soft hits).
+              </p>
+            </div>
+            <figure>
+              <div class="media">
+                <img src="assets/fig-cpu-vs-gpu-lowbatch.png" alt="GPU vs CPU at low batch" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                <div class="placeholder" style="display:none;">Image unavailable.</div>
+              </div>
+              <figcaption>
+                <strong>GPU vs. CPU at Low Batch</strong>
+                <span>CPU execution is often a poor fallback for interactive edge workloads.</span>
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+
+        <div style="margin-top: 50px;">
+          <h3 style="font-size: 18px; margin-bottom: 12px; color: var(--text);">05. Does SMoE help beyond decoding (prefill)?</h3>
+          <p style="margin-bottom: 16px; color: var(--muted); max-width: 80ch;">
+            <strong>Yes.</strong> While TPOT is the core metric for interactive decoding, prefill time also matters for end-to-end latency.
+            We observe consistent prefill-time improvements under the same memory and offloading constraints.
+          </p>
+          <div class="split reverse">
+            <div class="split-text">
+              <h4>Prefill time reduction</h4>
+              <p>
+                Prefill is typically more parallel than decoding, but it still suffers from expert movement and cache misses when VRAM is constrained.
+                SMoE reduces the loading pressure so prefill can finish faster on average.
+              </p>
+            </div>
+            <figure>
+              <div class="media">
+                <img src="assets/fig-prefill-time.png" alt="Prefill time" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                <div class="placeholder" style="display:none;">Image unavailable.</div>
+              </div>
+              <figcaption>
+                <strong>Prefill Time</strong>
+                <span>Average prefill time across baselines and SMoE.</span>
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+
+        <div style="margin-top: 50px;">
+          <h3 style="font-size: 18px; margin-bottom: 12px; color: var(--text);">06. Does prefetching compromise accuracy?</h3>
+          <p style="margin-bottom: 16px; color: var(--muted); max-width: 80ch;">
+            <strong>It can be controlled.</strong> We evaluate the quality impact of prefetching policies. Combined with importance-driven selection and substitution,
+            the system is designed to keep quality near-lossless while accelerating inference.
+          </p>
+          <div class="split">
+            <div class="split-text">
+              <h4>Quality under prefetching</h4>
+              <p>
+                Prefetching reduces stalls but risks loading the “wrong” experts when routing changes. Measuring accuracy under prefetching helps validate that the scheduling policy
+                stays aligned with the model’s true expert usage.
+              </p>
+            </div>
+            <figure>
+              <div class="media">
+                <img src="assets/fig-prefetch-accuracy.png" alt="Prefetching accuracy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                <div class="placeholder" style="display:none;">Image unavailable.</div>
+              </div>
+              <figcaption>
+                <strong>Prefetching Accuracy</strong>
+                <span>Accuracy impact of prefetching policies.</span>
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <section id="ascend" aria-label="Huawei Ascend Deployment">
+        <div class="section-head">
+          <div>
+            <h2>Huawei Ascend (昇腾) Ready</h2>
+            <p>Run SMoE on Ascend via CANN — preserving the same cache + pipeline advantages.</p>
+          </div>
+        </div>
+        <div class="divider"></div>
+
+        <div class="panel" style="margin-top: 16px;">
+          <div class="grid-3" style="grid-template-columns: 1.2fr .8fr; gap: 16px;">
+            <div>
+              <h3 style="margin: 0 0 10px; font-size: 18px;">Run SMoE on Ascend via CANN</h3>
+              <p style="margin: 0; color: var(--muted); font-family: var(--serif);">
+                The SMoE system design is hardware-agnostic: it relies on (1) importance-aware routing decisions, (2) expert cache management,
+                and (3) overlapping compute with asynchronous transfers. This maps naturally to the Huawei Ascend software stack via
+                <strong>CANN</strong> (Compute Architecture for Neural Networks): replace CUDA streams/memcpy with Ascend streams and async memcpy primitives,
+                and keep expert weights in device memory with a cache policy identical to the GPU version.
+              </p>
+              <div style="margin-top: 12px;">
+                <a class="btn primary" href="https://github.com/goingshr-debug/SMoE" target="_blank" rel="noreferrer">
+                  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M9 19c-3 1-3-2-4-2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+                    <path d="M15 19v-2.2c0-.7.2-1.2.6-1.6 2 .2 4-.5 4-4.2 0-1-.4-1.9-1-2.6.1-.3.5-1.2-.1-2.6 0 0-.8-.3-2.6 1a8.9 8.9 0 0 0-4.8 0c-1.8-1.3-2.6-1-2.6-1-.6 1.4-.2 2.3-.1 2.6-.6.7-1 1.6-1 2.6 0 3.7 2 4.4 4 4.2.3.3.5.7.6 1.2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M12 20c4 0 8-3 8-8a8 8 0 1 0-16 0c0 5 4 8 8 8z" stroke="currentColor" stroke-width="1.7" opacity=".35"/>
+                  </svg>
+                  SMoE Code (GitHub)
+                </a>
+              </div>
+              <div style="margin-top: 12px; display: grid; gap: 10px;">
+                <div class="bullet">
+                  <strong>Backend</strong>
+                  <span>Use CANN runtime to schedule compute streams and asynchronous host↔device transfers.</span>
+                </div>
+                <div class="bullet">
+                  <strong>Cache</strong>
+                  <span>Keep hot experts pinned in HBM; treat substitutions as cache hits to reduce transfers.</span>
+                </div>
+                <div class="bullet">
+                  <strong>Pipeline</strong>
+                  <span>Overlap expert compute with prefetch of critical experts, preserving low TPOT under low batch.</span>
+                </div>
+              </div>
+            </div>
+            <div class="card" style="margin: 0;">
+              <div class="tag">
+                <span class="pill" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none">
+                    <path d="M12 2l3 7 7 3-7 3-3 7-3-7-7-3 7-3 3-7z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+                  </svg>
+                </span>
+                <span>Production</span>
+              </div>
+              <h3 style="margin-top: 4px;">What you get</h3>
+              <p style="margin-top: 6px;">
+                <strong>Ascend-ready deployment</strong> to bring SMoE-style expert scheduling to domestic edge AI infrastructure while preserving core benefits:
+                lower PCIe/transfer overhead, higher cache reuse, and faster decoding.
+              </p>
+              <div style="margin-top: 12px; color: var(--muted-2); font-size: 12px;">
+                Ascend + CANN support enables domestic edge AI deployments without changing SMoE’s core scheduling logic.
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="citation" aria-label="Citation">
+        <div class="section-head">
+          <div>
+            <h2>Citation</h2>
+            <p>Please cite our work if you find it useful.</p>
+          </div>
+        </div>
+        <div class="divider"></div>
+
+        <div style="margin-top: 16px;">
+          <div class="row">
+            <strong>BibTeX</strong>
+            <button class="btn" id="copyBib" type="button">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M9 9h10v10H9z" stroke="currentColor" stroke-width="1.7"/>
+                <path d="M5 5h10v10" stroke="currentColor" stroke-width="1.7" opacity=".9"/>
+              </svg>
+              Copy
+            </button>
+          </div>
+          <pre class="bib" id="bibtex">@article{zhu2025enabling,
+  title={Enabling MoE on the Edge via Importance-Driven Expert Scheduling},
+  author={Zhu, Guoying and Li, Meng and Dai, Haipeng and Liu, Xuechen and Wang, Weijun and Li, Keran and Xiao, Jun and Chen, Ligeng and Wang, Wei},
+  journal={arXiv preprint arXiv:2508.18983},
+  year={2025}
+}</pre>
+        </div>
+      </section>
+
+      <footer>
+        <div class="foot">
+          <div>
+            <strong>MoE-Edge · SMoE</strong><br/>
+            <span>Project page for SMoE: Importance-Driven Expert Scheduling on memory-constrained edge hardware.</span>
+          </div>
+          <div>
+            <span>Paper:</span>
+            <a href="https://arxiv.org/abs/2508.18983" target="_blank" rel="noreferrer" style="color: rgba(17,24,39,.90); text-decoration: underline; text-decoration-color: rgba(17,24,39,.25);">
+              arXiv:2508.18983
+            </a>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </main>
+
+  <script>
+    // Smooth scroll
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', (e) => {
+        const id = a.getAttribute('href');
+        if (!id || id === '#') return;
+        const el = document.querySelector(id);
+        if (!el) return;
+        e.preventDefault();
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        history.replaceState(null, '', id);
+      });
+    });
+
+    // Active nav highlighting
+    const navLinks = Array.from(document.querySelectorAll('.nav a'));
+    const sections = navLinks
+      .map(a => document.querySelector(a.getAttribute('href')))
+      .filter(Boolean);
+
+    const io = new IntersectionObserver((entries) => {
+      const visible = entries
+        .filter(e => e.isIntersecting)
+        .sort((a,b) => b.intersectionRatio - a.intersectionRatio)[0];
+      if (!visible) return;
+      navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + visible.target.id));
+    }, { rootMargin: '-25% 0px -70% 0px', threshold: [0.08, 0.15, 0.25] });
+
+    sections.forEach(s => io.observe(s));
+
+    // Copy BibTeX
+    const btn = document.getElementById('copyBib');
+    const bib = document.getElementById('bibtex');
+    if (btn && bib) {
+      btn.addEventListener('click', async () => {
+        const text = bib.textContent || '';
+        try{
+          await navigator.clipboard.writeText(text);
+          btn.textContent = 'Copied';
+          setTimeout(() => (btn.textContent = 'Copy'), 1100);
+        }catch(e){
+          const ta = document.createElement('textarea');
+          ta.value = text;
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          ta.remove();
+          btn.textContent = 'Copied';
+          setTimeout(() => (btn.textContent = 'Copy'), 1100);
+        }
+      });
+    }
+  </script>
+</body>
+</html>
+
+
