@@ -541,11 +541,11 @@
         </a>
 
         <nav class="nav" aria-label="Sections">
-          <a href="#ascend">Ascend 910B</a>
-          <a href="#motivation">Motivation</a>
-          <a href="#method">Method</a>
-          <a href="#results">Results</a>
-          <a href="#citation">Citation</a>
+          <a href="#ascend"><span data-i18n="nav.ascend">Ascend 910B</span></a>
+          <a href="#motivation"><span data-i18n="nav.motivation">Motivation</span></a>
+          <a href="#method"><span data-i18n="nav.method">Method</span></a>
+          <a href="#results"><span data-i18n="nav.results">Results</span></a>
+          <a href="#citation"><span data-i18n="nav.citation">Citation</span></a>
         </nav>
 
         <div class="cta">
@@ -554,14 +554,14 @@
               <path d="M7 7h10v10H7z" stroke="currentColor" stroke-width="1.7" opacity=".9"/>
               <path d="M9 5h10v10" stroke="currentColor" stroke-width="1.7" opacity=".9"/>
             </svg>
-            arXiv
+            <span>arXiv</span>
           </a>
           <a class="btn primary" href="https://arxiv.org/pdf/2508.18983" target="_blank" rel="noreferrer">
             <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <path d="M7 3h7l3 3v15a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z" stroke="currentColor" stroke-width="1.7"/>
               <path d="M14 3v4h4" stroke="currentColor" stroke-width="1.7"/>
             </svg>
-            PDF
+            <span data-i18n="cta.pdf">PDF</span>
           </a>
           <a class="btn" href="https://github.com/goingshr-debug/SMoE" target="_blank" rel="noreferrer">
             <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -569,8 +569,11 @@
               <path d="M15 19v-2.2c0-.7.2-1.2.6-1.6 2 .2 4-.5 4-4.2 0-1-.4-1.9-1-2.6.1-.3.5-1.2-.1-2.6 0 0-.8-.3-2.6 1a8.9 8.9 0 0 0-4.8 0c-1.8-1.3-2.6-1-2.6-1-.6 1.4-.2 2.3-.1 2.6-.6.7-1 1.6-1 2.6 0 3.7 2 4.4 4 4.2.3.3.5.7.6 1.2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
               <path d="M12 20c4 0 8-3 8-8a8 8 0 1 0-16 0c0 5 4 8 8 8z" stroke="currentColor" stroke-width="1.7" opacity=".35"/>
             </svg>
-            Code
+            <span data-i18n="cta.code">Code</span>
           </a>
+          <button class="btn" id="langToggle" type="button" aria-label="Toggle language">
+            中文
+          </button>
         </div>
       </div>
     </div>
@@ -587,10 +590,10 @@
                 <svg viewBox="0 0 24 24" fill="currentColor" style="width:18px;height:18px;">
                   <path d="M12 2L2 7l10 5 10-5-10-5zm0 9l2.968 1.484L12 14l-2.968-1.516L12 11zm0 2.296l-5-2.5v5l5 2.5 5-2.5v-5l-5 2.5z"/>
                 </svg>
-                <strong style="font-size:13px; letter-spacing:.03em; text-transform:uppercase;">Ascend Ready</strong>
+                <strong style="font-size:13px; letter-spacing:.03em; text-transform:uppercase;" data-i18n="ascend.badge">Ascend Ready</strong>
               </div>
-              <h2 style="margin: 0 0 10px; font-size: 22px; letter-spacing: -0.02em;">Huawei Ascend 910B Support</h2>
-              <p style="margin: 0; color: var(--muted); font-family: var(--serif); line-height:1.7;">
+              <h2 style="margin: 0 0 10px; font-size: 22px; letter-spacing: -0.02em;" data-i18n="ascend.title">Huawei Ascend 910B Support</h2>
+              <p style="margin: 0; color: var(--muted); font-family: var(--serif); line-height:1.7;" data-i18n="ascend.desc">
                 SMoE can be deployed on Huawei Ascend platforms via <strong>CANN</strong>. The core idea remains unchanged: keep hot experts in device memory,
                 maximize reuse (hits + soft hits), and overlap compute with asynchronous transfers to minimize end-to-end latency.
               </p>
@@ -601,25 +604,25 @@
                     <path d="M15 19v-2.2c0-.7.2-1.2.6-1.6 2 .2 4-.5 4-4.2 0-1-.4-1.9-1-2.6.1-.3.5-1.2-.1-2.6 0 0-.8-.3-2.6 1a8.9 8.9 0 0 0-4.8 0c-1.8-1.3-2.6-1-2.6-1-.6 1.4-.2 2.3-.1 2.6-.6.7-1 1.6-1 2.6 0 3.7 2 4.4 4 4.2.3.3.5.7.6 1.2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
                     <path d="M12 20c4 0 8-3 8-8a8 8 0 1 0-16 0c0 5 4 8 8 8z" stroke="currentColor" stroke-width="1.7" opacity=".35"/>
                   </svg>
-                  SMoE Code (GitHub)
+                  <span data-i18n="ascend.btnCode">SMoE Code (GitHub)</span>
                 </a>
                 <a class="btn" href="#method">
-                  View Method
+                  <span data-i18n="ascend.btnMethod">View Method</span>
                 </a>
               </div>
             </div>
             <div class="bullets">
               <div class="bullet">
-                <strong>Ascend 910B (Da Vinci)</strong>
-                <span>High-throughput AI accelerator designed for large-scale training and inference.</span>
+                <strong data-i18n="ascend.b1.title">Ascend 910B (Da Vinci)</strong>
+                <span data-i18n="ascend.b1.desc">High-throughput AI accelerator designed for large-scale training and inference.</span>
               </div>
               <div class="bullet">
-                <strong>HBM capacity & bandwidth</strong>
-                <span>Large HBM enables a bigger expert cache residency and fewer transfers.</span>
+                <strong data-i18n="ascend.b2.title">HBM capacity & bandwidth</strong>
+                <span data-i18n="ascend.b2.desc">Large HBM enables a bigger expert cache residency and fewer transfers.</span>
               </div>
               <div class="bullet">
-                <strong>CANN runtime</strong>
-                <span>Stream-based scheduling + async memcpy primitives to overlap compute and transfers.</span>
+                <strong data-i18n="ascend.b3.title">CANN runtime</strong>
+                <span data-i18n="ascend.b3.desc">Stream-based scheduling + async memcpy primitives to overlap compute and transfers.</span>
               </div>
             </div>
           </div>
@@ -631,12 +634,12 @@
           <div>
             <div class="badge">
               <span class="dot" aria-hidden="true"></span>
-              <span>Edge MoE inference · Substitution + Scheduling · CPU–GPU Pipeline</span>
+              <span data-i18n="hero.badge">Edge MoE inference · Substitution + Scheduling · CPU–GPU Pipeline</span>
             </div>
 
-            <h1>Enabling MoE on the Edge<br/>via Importance-Driven Expert Scheduling</h1>
+            <h1 data-i18n="hero.title">Enabling MoE on the Edge<br/>via Importance-Driven Expert Scheduling</h1>
 
-            <p class="subtitle">
+            <p class="subtitle" data-i18n="hero.subtitle">
               On memory-constrained edge GPUs, we adopt an <strong>importance-driven</strong> policy to prioritize critical experts and <strong>substitute</strong> low-importance activated experts
               with functionally similar experts already cached in GPU memory, reducing PCIe transfers and CPU computation to significantly improve decoding latency (TPOT).
             </p>
@@ -646,21 +649,21 @@
           <aside class="hero-card" aria-label="Highlights">
             <div class="top">
               <div>
-                <strong>Key claims</strong><br/>
-                <span>high-level summary</span>
+                <strong data-i18n="hero.keyClaimsTitle">Key claims</strong><br/>
+                <span data-i18n="hero.keyClaimsSubtitle">high-level summary</span>
               </div>
               <span style="color: var(--muted); font-size: 12px;">SMoE</span>
             </div>
             <div class="metrics">
               <div class="metric">
-                <div class="k">Decoding latency</div>
+                <div class="k" data-i18n="hero.metric1.k">Decoding latency</div>
                 <div class="v">-48%<small>TPOT</small></div>
-                <div class="hint">vs. SOTA baselines</div>
+                <div class="hint" data-i18n="hero.metric1.hint">vs. SOTA baselines</div>
               </div>
               <div class="metric">
-                <div class="k">Cache hit rate</div>
+                <div class="k" data-i18n="hero.metric2.k">Cache hit rate</div>
                 <div class="v">≥60%<small>experts</small></div>
-                <div class="hint">with near-lossless accuracy</div>
+                <div class="hint" data-i18n="hero.metric2.hint">with near-lossless accuracy</div>
               </div>
             </div>
           </aside>
@@ -670,16 +673,16 @@
       <section id="motivation" aria-label="Motivation">
         <div class="section-head">
           <div>
-            <h2>Motivation</h2>
-            <p>Why edge MoE is hard: PCIe transfer dominates the latency.</p>
+            <h2 data-i18n="motivation.title">Motivation</h2>
+            <p data-i18n="motivation.subtitle">Why edge MoE is hard: PCIe transfer dominates the latency.</p>
           </div>
         </div>
         <div class="divider"></div>
 
         <div class="grid-3" style="margin-top: 16px; grid-template-columns: 1.2fr 0.8fr; align-items: center;">
           <div class="span-6" style="grid-column: span 1;">
-            <h3 style="margin-top:0; font-size:18px;">The "Memory Wall" Bottleneck</h3>
-            <p style="color:var(--muted); font-size:15px; line-height:1.7;">
+            <h3 style="margin-top:0; font-size:18px;" data-i18n="motivation.h3">The "Memory Wall" Bottleneck</h3>
+            <p style="color:var(--muted); font-size:15px; line-height:1.7;" data-i18n="motivation.p">
               On edge devices (e.g., NVIDIA A6000), fetching experts from CPU memory via PCIe is orders of magnitude slower than computing them on GPU.
               As shown in the figure, the <strong>PCIe transfer time (orange)</strong> often exceeds the actual <strong>GPU computation time (blue)</strong> by a large margin.
               To achieve real-time inference (low TPOT), optimizing compute is not enough—we must minimize these expensive transfers.
@@ -688,11 +691,11 @@
           <figure class="span-6" style="grid-column: span 1;">
             <div class="media">
               <img src="assets/fig-bottleneck.png" alt="Bottleneck Analysis" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-              <div class="placeholder" style="display:none;">Image unavailable.</div>
+              <div class="placeholder" style="display:none;" data-i18n="common.imgUnavailable">Image unavailable.</div>
             </div>
             <figcaption>
-              <strong>The Bottleneck</strong>
-              <span>PCIe transfer vs. GPU compute time.</span>
+              <strong data-i18n="motivation.cap.title">The Bottleneck</strong>
+              <span data-i18n="motivation.cap.desc">PCIe transfer vs. GPU compute time.</span>
             </figcaption>
           </figure>
         </div>
@@ -701,8 +704,8 @@
       <section id="method" aria-label="Method">
         <div class="section-head">
           <div>
-            <h2>Method</h2>
-            <p>SMoE: Importance-Driven Scheduling with Substitution.</p>
+            <h2 data-i18n="method.title">Method</h2>
+            <p data-i18n="method.subtitle">SMoE: Importance-Driven Scheduling with Substitution.</p>
           </div>
         </div>
         <div class="divider"></div>
@@ -715,10 +718,10 @@
                   <path d="M4 7h16M4 12h10M4 17h16" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
                 </svg>
               </span>
-              <span>1. Router</span>
+              <span data-i18n="method.card1.tag">1. Router</span>
             </div>
-            <h3>Expert-Cache Router</h3>
-            <p>Distinguish critical vs. non-critical experts based on gating scores. Prioritize VRAM for critical ones.</p>
+            <h3 data-i18n="method.card1.title">Expert-Cache Router</h3>
+            <p data-i18n="method.card1.desc">Distinguish critical vs. non-critical experts based on gating scores. Prioritize VRAM for critical ones.</p>
           </div>
           <div class="card">
             <div class="tag">
@@ -728,10 +731,10 @@
                   <path d="M12 21a9 9 0 1 0-9-9" stroke="currentColor" stroke-width="1.7" opacity=".9"/>
                 </svg>
               </span>
-              <span>2. Strategy</span>
+              <span data-i18n="method.card2.tag">2. Strategy</span>
             </div>
-            <h3>Similarity-based Substitution</h3>
-            <p>If a non-critical expert is missing, don't fetch it. Substitute it with a functionally similar cached expert.</p>
+            <h3 data-i18n="method.card2.title">Similarity-based Substitution</h3>
+            <p data-i18n="method.card2.desc">If a non-critical expert is missing, don't fetch it. Substitute it with a functionally similar cached expert.</p>
           </div>
           <div class="card">
             <div class="tag">
@@ -741,10 +744,10 @@
                   <path d="M3 12h2M19 12h2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
                 </svg>
               </span>
-              <span>3. System</span>
+              <span data-i18n="method.card3.tag">3. System</span>
             </div>
-            <h3>CPU–GPU Pipeline</h3>
-            <p>Overlap the computation of cached experts with the prefetching of missing critical experts.</p>
+            <h3 data-i18n="method.card3.title">CPU–GPU Pipeline</h3>
+            <p data-i18n="method.card3.desc">Overlap the computation of cached experts with the prefetching of missing critical experts.</p>
           </div>
         </div>
 
@@ -753,22 +756,22 @@
           <figure class="span-7">
             <div class="media" style="height: 380px;">
               <img src="assets/fig1.png" alt="Framework Overview" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-              <div class="placeholder" style="display:none;">Image unavailable.</div>
+              <div class="placeholder" style="display:none;" data-i18n="common.imgUnavailable">Image unavailable.</div>
             </div>
             <figcaption>
-              <strong>Framework Overview</strong>
-              <span>Substitution-aware scheduler: replace low-score experts, prefetch top-score ones.</span>
+              <strong data-i18n="method.fig1.title">Framework Overview</strong>
+              <span data-i18n="method.fig1.desc">Substitution-aware scheduler: replace low-score experts, prefetch top-score ones.</span>
             </figcaption>
           </figure>
           
           <figure class="span-5">
             <div class="media" style="height: 380px;">
               <img src="assets/fig-pipeline.png" alt="Execution Pipeline" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-              <div class="placeholder" style="display:none;">Image unavailable.</div>
+              <div class="placeholder" style="display:none;" data-i18n="common.imgUnavailable">Image unavailable.</div>
             </div>
             <figcaption>
-              <strong>Execution Pipeline</strong>
-              <span>Overlapping GPU compute, CPU offloading, and PCIe transfers.</span>
+              <strong data-i18n="method.pipeline.title">Execution Pipeline</strong>
+              <span data-i18n="method.pipeline.desc">Overlapping GPU compute, CPU offloading, and PCIe transfers.</span>
             </figcaption>
           </figure>
         </div>
@@ -777,15 +780,15 @@
       <section id="results" aria-label="Results">
         <div class="section-head">
           <div>
-            <h2>Key Findings</h2>
-            <p>How far can we reduce latency without hurting accuracy?</p>
+            <h2 data-i18n="results.title">Key Findings</h2>
+            <p data-i18n="results.subtitle">How far can we reduce latency without hurting accuracy?</p>
           </div>
         </div>
         <div class="divider"></div>
 
         <div style="margin-top: 24px;">
-          <h3 style="font-size: 18px; margin-bottom: 12px; color: var(--text);">01. Does substitution significantly reduce decoding latency?</h3>
-          <p style="margin-bottom: 16px; color: var(--muted); max-width: 80ch;">
+          <h3 style="font-size: 18px; margin-bottom: 12px; color: var(--text);" data-i18n="results.q1.title">01. Does substitution significantly reduce decoding latency?</h3>
+          <p style="margin-bottom: 16px; color: var(--muted); max-width: 80ch;" data-i18n="results.q1.p">
             <strong>Yes, by nearly half.</strong> By substituting non-critical experts instead of loading them, SMoE avoids a massive amount of PCIe traffic.
             Compared to state-of-the-art offloading baselines, our method achieves up to a <strong>48% reduction in TPOT</strong> (Time Per Output Token).
           </p>
@@ -793,19 +796,19 @@
             <figure class="span-12">
               <div class="media" style="min-height: 400px;">
                 <img src="assets/fig-latency.png" alt="Main Result" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-                <div class="placeholder" style="display:none;">Image unavailable.</div>
+                <div class="placeholder" style="display:none;" data-i18n="common.imgUnavailable">Image unavailable.</div>
               </div>
               <figcaption>
-                <strong>Decoding Latency (TPOT)</strong>
-                <span>Comparison across 5 workloads showing consistent speedups over baselines like MoE-Infinity and ProMoE.</span>
+                <strong data-i18n="results.q1.cap.title">Decoding Latency (TPOT)</strong>
+                <span data-i18n="results.q1.cap.desc">Comparison across 5 workloads showing consistent speedups over baselines like MoE-Infinity and ProMoE.</span>
               </figcaption>
             </figure>
           </div>
         </div>
 
         <div style="margin-top: 50px;">
-          <h3 style="font-size: 18px; margin-bottom: 12px; color: var(--text);">02. Why does the speedup happen?</h3>
-          <p style="margin-bottom: 24px; color: var(--muted); max-width: 80ch;">
+          <h3 style="font-size: 18px; margin-bottom: 12px; color: var(--text);" data-i18n="results.q2.title">02. Why does the speedup happen?</h3>
+          <p style="margin-bottom: 24px; color: var(--muted); max-width: 80ch;" data-i18n="results.q2.p">
             <strong>Because PCIe overhead is cut drastically.</strong> As shown below, TPOT is strongly correlated with PCIe time.
             By maintaining a high <strong>cache hit rate (>60%)</strong> through substitution, we ensure that most activated experts are already on the GPU.
           </p>
@@ -813,8 +816,8 @@
           <!-- Alternating text + figure blocks (fills space and improves readability) -->
           <div class="split">
             <div class="split-text">
-              <h4>PCIe time directly translates to TPOT</h4>
-              <p>
+              <h4 data-i18n="results.q2.s1.h">PCIe time directly translates to TPOT</h4>
+              <p data-i18n="results.q2.s1.p">
                 In edge settings, expert offloading is dominated by PCIe transfer. This plot shows a strong correlation between PCIe time and TPOT,
                 explaining why reducing transfers yields immediate decoding speedups.
               </p>
@@ -822,19 +825,19 @@
             <figure>
               <div class="media">
                 <img src="assets/fig-pcie-vs-tpot.png" alt="PCIe vs TPOT" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-                <div class="placeholder" style="display:none;">Image unavailable.</div>
+                <div class="placeholder" style="display:none;" data-i18n="common.imgUnavailable">Image unavailable.</div>
               </div>
               <figcaption>
-                <strong>PCIe vs. TPOT</strong>
-                <span>Lower PCIe time consistently maps to lower TPOT.</span>
+                <strong data-i18n="results.q2.s1.cap.title">PCIe vs. TPOT</strong>
+                <span data-i18n="results.q2.s1.cap.desc">Lower PCIe time consistently maps to lower TPOT.</span>
               </figcaption>
             </figure>
           </div>
 
           <div class="split reverse">
             <div class="split-text">
-              <h4>High cache hit rate keeps execution on GPU</h4>
-              <p>
+              <h4 data-i18n="results.q2.s2.h">High cache hit rate keeps execution on GPU</h4>
+              <p data-i18n="results.q2.s2.p">
                 SMoE maximizes the reuse ratio of GPU-cached experts. With substitution, many low-importance activations become “soft hits”,
                 so the GPU can execute most experts without waiting for CPU→GPU transfers.
               </p>
@@ -842,19 +845,19 @@
             <figure>
               <div class="media">
                 <img src="assets/fig-hit-rate.png" alt="Cache hit rate" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-                <div class="placeholder" style="display:none;">Image unavailable.</div>
+                <div class="placeholder" style="display:none;" data-i18n="common.imgUnavailable">Image unavailable.</div>
               </div>
               <figcaption>
-                <strong>Cache Hit Rate</strong>
-                <span>Sustained high reuse ratio across settings.</span>
+                <strong data-i18n="results.q2.s2.cap.title">Cache Hit Rate</strong>
+                <span data-i18n="results.q2.s2.cap.desc">Sustained high reuse ratio across settings.</span>
               </figcaption>
             </figure>
           </div>
 
           <div class="split">
             <div class="split-text">
-              <h4>Substitution reduces the number of experts that must be loaded</h4>
-              <p>
+              <h4 data-i18n="results.q2.s3.h">Substitution reduces the number of experts that must be loaded</h4>
+              <p data-i18n="results.q2.s3.p">
                 The key is selectivity: only a few activated experts are truly critical (high-score). Low-score activated experts can be substituted
                 by functionally similar experts already in VRAM, so fewer experts need fetching and prefetching becomes lighter.
               </p>
@@ -862,19 +865,19 @@
             <figure>
               <div class="media">
                 <img src="assets/fig-components-load.png" alt="Reduced load" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-                <div class="placeholder" style="display:none;">Image unavailable.</div>
+                <div class="placeholder" style="display:none;" data-i18n="common.imgUnavailable">Image unavailable.</div>
               </div>
               <figcaption>
-                <strong>Reduced Load</strong>
-                <span>Fewer experts need fetching from CPU memory.</span>
+                <strong data-i18n="results.q2.s3.cap.title">Reduced Load</strong>
+                <span data-i18n="results.q2.s3.cap.desc">Fewer experts need fetching from CPU memory.</span>
               </figcaption>
             </figure>
           </div>
         </div>
 
         <div style="margin-top: 50px;">
-          <h3 style="font-size: 18px; margin-bottom: 12px; color: var(--text);">03. Which component contributes the most?</h3>
-          <p style="margin-bottom: 16px; color: var(--muted); max-width: 80ch;">
+          <h3 style="font-size: 18px; margin-bottom: 12px; color: var(--text);" data-i18n="results.q3.title">03. Which component contributes the most?</h3>
+          <p style="margin-bottom: 16px; color: var(--muted); max-width: 80ch;" data-i18n="results.q3.p">
             <strong>Substitution is the key driver.</strong> The ablation study below shows that while the pipeline and prefetching help,
             the substitution mechanism (orange bar segments) provides the most significant reduction in latency.
           </p>
@@ -882,26 +885,26 @@
             <figure class="span-8" style="grid-column: 3 / 11;">
               <div class="media" style="min-height: 350px;">
                 <img src="assets/fig-ablation.png" alt="Ablation Study" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-                <div class="placeholder" style="display:none;">Image unavailable.</div>
+                <div class="placeholder" style="display:none;" data-i18n="common.imgUnavailable">Image unavailable.</div>
               </div>
               <figcaption>
-                <strong>Component Ablation</strong>
-                <span>Breakdown of latency savings by component.</span>
+                <strong data-i18n="results.q3.cap.title">Component Ablation</strong>
+                <span data-i18n="results.q3.cap.desc">Breakdown of latency savings by component.</span>
               </figcaption>
             </figure>
           </div>
         </div>
 
         <div style="margin-top: 50px;">
-          <h3 style="font-size: 18px; margin-bottom: 12px; color: var(--text);">04. Is CPU compute a viable fallback at low batch?</h3>
-          <p style="margin-bottom: 16px; color: var(--muted); max-width: 80ch;">
+          <h3 style="font-size: 18px; margin-bottom: 12px; color: var(--text);" data-i18n="results.q4.title">04. Is CPU compute a viable fallback at low batch?</h3>
+          <p style="margin-bottom: 16px; color: var(--muted); max-width: 80ch;" data-i18n="results.q4.p">
             <strong>Usually not.</strong> In low-batch edge serving, CPU compute can be significantly slower than GPU execution, and the system often becomes
             dominated by memory movement and CPU-side compute stalls. This motivates keeping as much execution on GPU as possible.
           </p>
           <div class="split">
             <div class="split-text">
-              <h4>GPU vs. CPU under low-batch serving</h4>
-              <p>
+              <h4 data-i18n="results.q4.s1.h">GPU vs. CPU under low-batch serving</h4>
+              <p data-i18n="results.q4.s1.p">
                 This comparison highlights the gap between GPU (A6000) and CPU (8-core) at low batch. SMoE’s goal is to avoid CPU-side expert execution whenever possible
                 by increasing GPU-resident “hits” (hard hits + soft hits).
               </p>
@@ -909,26 +912,26 @@
             <figure>
               <div class="media">
                 <img src="assets/fig-cpu-vs-gpu-lowbatch.png" alt="GPU vs CPU at low batch" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-                <div class="placeholder" style="display:none;">Image unavailable.</div>
+                <div class="placeholder" style="display:none;" data-i18n="common.imgUnavailable">Image unavailable.</div>
               </div>
               <figcaption>
-                <strong>GPU vs. CPU at Low Batch</strong>
-                <span>CPU execution is often a poor fallback for interactive edge workloads.</span>
+                <strong data-i18n="results.q4.cap.title">GPU vs. CPU at Low Batch</strong>
+                <span data-i18n="results.q4.cap.desc">CPU execution is often a poor fallback for interactive edge workloads.</span>
               </figcaption>
             </figure>
           </div>
         </div>
 
         <div style="margin-top: 50px;">
-          <h3 style="font-size: 18px; margin-bottom: 12px; color: var(--text);">05. Does SMoE help beyond decoding (prefill)?</h3>
-          <p style="margin-bottom: 16px; color: var(--muted); max-width: 80ch;">
+          <h3 style="font-size: 18px; margin-bottom: 12px; color: var(--text);" data-i18n="results.q5.title">05. Does SMoE help beyond decoding (prefill)?</h3>
+          <p style="margin-bottom: 16px; color: var(--muted); max-width: 80ch;" data-i18n="results.q5.p">
             <strong>Yes.</strong> While TPOT is the core metric for interactive decoding, prefill time also matters for end-to-end latency.
             We observe consistent prefill-time improvements under the same memory and offloading constraints.
           </p>
           <div class="split reverse">
             <div class="split-text">
-              <h4>Prefill time reduction</h4>
-              <p>
+              <h4 data-i18n="results.q5.s1.h">Prefill time reduction</h4>
+              <p data-i18n="results.q5.s1.p">
                 Prefill is typically more parallel than decoding, but it still suffers from expert movement and cache misses when VRAM is constrained.
                 SMoE reduces the loading pressure so prefill can finish faster on average.
               </p>
@@ -936,26 +939,26 @@
             <figure>
               <div class="media">
                 <img src="assets/fig-prefill-time.png" alt="Prefill time" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-                <div class="placeholder" style="display:none;">Image unavailable.</div>
+                <div class="placeholder" style="display:none;" data-i18n="common.imgUnavailable">Image unavailable.</div>
               </div>
               <figcaption>
-                <strong>Prefill Time</strong>
-                <span>Average prefill time across baselines and SMoE.</span>
+                <strong data-i18n="results.q5.cap.title">Prefill Time</strong>
+                <span data-i18n="results.q5.cap.desc">Average prefill time across baselines and SMoE.</span>
               </figcaption>
             </figure>
           </div>
         </div>
 
         <div style="margin-top: 50px;">
-          <h3 style="font-size: 18px; margin-bottom: 12px; color: var(--text);">06. Does prefetching compromise accuracy?</h3>
-          <p style="margin-bottom: 16px; color: var(--muted); max-width: 80ch;">
+          <h3 style="font-size: 18px; margin-bottom: 12px; color: var(--text);" data-i18n="results.q6.title">06. Does prefetching compromise accuracy?</h3>
+          <p style="margin-bottom: 16px; color: var(--muted); max-width: 80ch;" data-i18n="results.q6.p">
             <strong>It can be controlled.</strong> We evaluate the quality impact of prefetching policies. Combined with importance-driven selection and substitution,
             the system is designed to keep quality near-lossless while accelerating inference.
           </p>
           <div class="split">
             <div class="split-text">
-              <h4>Quality under prefetching</h4>
-              <p>
+              <h4 data-i18n="results.q6.s1.h">Quality under prefetching</h4>
+              <p data-i18n="results.q6.s1.p">
                 Prefetching reduces stalls but risks loading the “wrong” experts when routing changes. Measuring accuracy under prefetching helps validate that the scheduling policy
                 stays aligned with the model’s true expert usage.
               </p>
@@ -963,11 +966,11 @@
             <figure>
               <div class="media">
                 <img src="assets/fig-prefetch-accuracy.png" alt="Prefetching accuracy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-                <div class="placeholder" style="display:none;">Image unavailable.</div>
+                <div class="placeholder" style="display:none;" data-i18n="common.imgUnavailable">Image unavailable.</div>
               </div>
               <figcaption>
-                <strong>Prefetching Accuracy</strong>
-                <span>Accuracy impact of prefetching policies.</span>
+                <strong data-i18n="results.q6.cap.title">Prefetching Accuracy</strong>
+                <span data-i18n="results.q6.cap.desc">Accuracy impact of prefetching policies.</span>
               </figcaption>
             </figure>
           </div>
@@ -977,8 +980,8 @@
       <section id="citation" aria-label="Citation">
         <div class="section-head">
           <div>
-            <h2>Citation</h2>
-            <p>Please cite our work if you find it useful.</p>
+            <h2 data-i18n="citation.title">Citation</h2>
+            <p data-i18n="citation.subtitle">Please cite our work if you find it useful.</p>
           </div>
         </div>
         <div class="divider"></div>
@@ -991,7 +994,7 @@
                 <path d="M9 9h10v10H9z" stroke="currentColor" stroke-width="1.7"/>
                 <path d="M5 5h10v10" stroke="currentColor" stroke-width="1.7" opacity=".9"/>
               </svg>
-              Copy
+              <span id="copyBibLabel" data-i18n="actions.copy">Copy</span>
             </button>
           </div>
           <pre class="bib" id="bibtex">@article{zhu2025enabling,
@@ -1007,10 +1010,10 @@
         <div class="foot">
           <div>
             <strong>MoE-Edge · SMoE</strong><br/>
-            <span>Project page for SMoE: Importance-Driven Expert Scheduling on memory-constrained edge hardware.</span>
+            <span data-i18n="footer.blurb">Project page for SMoE: Importance-Driven Expert Scheduling on memory-constrained edge hardware.</span>
           </div>
           <div>
-            <span>Paper:</span>
+            <span data-i18n="footer.paper">Paper:</span>
             <a href="https://arxiv.org/abs/2508.18983" target="_blank" rel="noreferrer" style="color: rgba(17,24,39,.90); text-decoration: underline; text-decoration-color: rgba(17,24,39,.25);">
               arXiv:2508.18983
             </a>
@@ -1050,16 +1053,166 @@
 
     sections.forEach(s => io.observe(s));
 
-    // Copy BibTeX
+    // i18n (EN / 简体中文)
+    const zh = {
+      // nav / cta
+      "nav.ascend": "昇腾910B",
+      "nav.motivation": "动机",
+      "nav.method": "方法",
+      "nav.results": "结果",
+      "nav.citation": "引用",
+      "cta.pdf": "论文PDF",
+      "cta.code": "代码",
+
+      // ascend
+      "ascend.badge": "昇腾支持",
+      "ascend.title": "华为昇腾 910B 支持",
+      "ascend.desc": "SMoE 可通过 <strong>CANN</strong> 部署在昇腾平台上。核心思路不变：将热点专家常驻设备内存，最大化复用（命中 + 软命中），并将计算与异步传输重叠以降低端到端时延。",
+      "ascend.btnCode": "SMoE 代码（GitHub）",
+      "ascend.btnMethod": "查看方法",
+      "ascend.b1.title": "昇腾 910B（达芬奇）",
+      "ascend.b1.desc": "面向大规模训练与推理的高吞吐 AI 加速器。",
+      "ascend.b2.title": "HBM 容量与带宽",
+      "ascend.b2.desc": "更大的 HBM 常驻缓存意味着更少的主机↔设备传输。",
+      "ascend.b3.title": "CANN 运行时",
+      "ascend.b3.desc": "基于 Stream 的调度 + 异步 memcpy，实现算拷重叠。",
+
+      // hero
+      "hero.badge": "边缘 MoE 推理 · 替换 + 调度 · CPU–GPU 流水线",
+      "hero.title": "Enabling MoE on the Edge<br/>via Importance-Driven Expert Scheduling",
+      "hero.subtitle": "在显存受限的边缘设备上，我们采用<strong>重要性驱动</strong>策略优先保障关键专家，并将低重要性激活专家<strong>替换</strong>为 GPU 内存中功能相近的已缓存专家，从而减少 PCIe 传输与 CPU 计算开销，显著降低解码延迟（TPOT）。",
+      "hero.keyClaimsTitle": "关键指标",
+      "hero.keyClaimsSubtitle": "项目亮点概览",
+      "hero.metric1.k": "解码延迟",
+      "hero.metric1.hint": "相对 SOTA 基线",
+      "hero.metric2.k": "缓存命中率",
+      "hero.metric2.hint": "几乎无损精度",
+
+      // motivation
+      "motivation.title": "动机",
+      "motivation.subtitle": "为什么边缘 MoE 难：PCIe 传输主导时延。",
+      "motivation.h3": "“显存墙”瓶颈",
+      "motivation.p": "在边缘设备（如 NVIDIA A6000）上，经 PCIe 从 CPU 内存拉取专家的代价往往远高于 GPU 计算本身。如图所示，<strong>PCIe 传输时间（橙色）</strong>经常显著超过<strong>GPU 计算时间（蓝色）</strong>。要实现低 TPOT 的实时推理，关键在于尽量减少这类昂贵传输。",
+      "motivation.cap.title": "瓶颈来源",
+      "motivation.cap.desc": "PCIe 传输 vs. GPU 计算时间。",
+
+      // method
+      "method.title": "方法",
+      "method.subtitle": "SMoE：重要性驱动的替换式专家调度。",
+      "method.card1.tag": "1. 路由",
+      "method.card1.title": "专家缓存路由器",
+      "method.card1.desc": "基于 gating 分数区分关键/非关键专家，优先让关键专家常驻显存。",
+      "method.card2.tag": "2. 策略",
+      "method.card2.title": "基于相似性的替换",
+      "method.card2.desc": "非关键专家不在设备侧时不再阻塞加载，用功能相近的缓存专家替换继续推理。",
+      "method.card3.tag": "3. 系统",
+      "method.card3.title": "CPU–GPU 流水线",
+      "method.card3.desc": "用异步预取与计算重叠隐藏加载开销，稳定低 TPOT。",
+      "method.fig1.title": "框架总览",
+      "method.fig1.desc": "替换式调度：低分替换，高分预取。",
+      "method.pipeline.title": "执行流水线",
+      "method.pipeline.desc": "GPU 计算、CPU 侧处理与 PCIe 传输交叠执行。",
+
+      // results
+      "results.title": "关键发现",
+      "results.subtitle": "在不牺牲精度的前提下，时延能降到什么程度？",
+      "results.q1.title": "01. 替换是否显著降低解码时延？",
+      "results.q1.p": "<strong>是的，接近减半。</strong> 通过替换非关键专家，SMoE 大幅减少 PCIe 传输；相对主流 offloading 基线，TPOT 最高可降低 <strong>48%</strong>。",
+      "results.q1.cap.title": "解码延迟（TPOT）",
+      "results.q1.cap.desc": "在 5 类 workload 上稳定优于多种基线方案。",
+      "results.q2.title": "02. 加速的根本原因是什么？",
+      "results.q2.p": "<strong>PCIe 开销被显著削减。</strong> TPOT 与 PCIe 时间强相关；通过替换维持较高命中率（>60%），让多数专家计算留在设备侧完成。",
+      "results.q2.s1.h": "PCIe 时间几乎直接决定 TPOT",
+      "results.q2.s1.p": "边缘场景下，offloading 主要受 PCIe 传输影响。该图展示了 PCIe 时间与 TPOT 的强相关性，解释了为何“减少传输”会立刻带来提速。",
+      "results.q2.s1.cap.title": "PCIe vs. TPOT",
+      "results.q2.s1.cap.desc": "PCIe 越低，TPOT 越低。",
+      "results.q2.s2.h": "高命中率让推理尽量留在设备侧",
+      "results.q2.s2.p": "替换将大量低重要性激活变成“软命中”，提升复用率，使 GPU/Ascend 能在不等待传输的情况下执行更多专家。",
+      "results.q2.s2.cap.title": "缓存命中率",
+      "results.q2.s2.cap.desc": "不同设置下保持较高复用率。",
+      "results.q2.s3.h": "替换减少必须加载的专家数量",
+      "results.q2.s3.p": "关键在于选择性：真正影响质量的是少数高分专家；大量低分激活可被设备侧相近专家替换，从而减少加载与预取压力。",
+      "results.q2.s3.cap.title": "加载需求下降",
+      "results.q2.s3.cap.desc": "需要从 CPU 拉取的专家更少。",
+      "results.q3.title": "03. 哪个组件贡献最大？",
+      "results.q3.p": "<strong>替换是核心驱动。</strong> 消融结果显示：流水线和预取有帮助，但替换机制带来的时延降低最显著。",
+      "results.q3.cap.title": "组件消融",
+      "results.q3.cap.desc": "不同组件对时延收益的贡献分解。",
+      "results.q4.title": "04. 低 batch 下，CPU 计算是可行兜底吗？",
+      "results.q4.p": "<strong>通常不是。</strong> 交互式低 batch 场景里，CPU 计算和内存搬运开销往往更大，系统容易被 CPU/传输拖慢，因此目标是尽量避免 CPU 执行专家。",
+      "results.q4.s1.h": "低 batch 下 GPU 与 CPU 的差距",
+      "results.q4.s1.p": "该对比展示了 low-batch 场景下 GPU 与 CPU 的性能差异。SMoE 的目标是通过提升设备侧“命中”（硬命中+软命中）尽量避免 CPU 执行专家。",
+      "results.q4.cap.title": "GPU vs. CPU（低 batch）",
+      "results.q4.cap.desc": "CPU 往往不是交互式推理的理想兜底方案。",
+      "results.q5.title": "05. 除了解码，Prefill 也能受益吗？",
+      "results.q5.p": "<strong>可以。</strong> 虽然 TPOT 是交互式解码核心指标，但 prefill 也影响端到端时延；在同样的显存/卸载约束下，prefill 时间也有一致改善。",
+      "results.q5.s1.h": "Prefill 时间降低",
+      "results.q5.s1.p": "Prefill 更并行，但在显存受限时依然会被专家搬运与 cache miss 影响。SMoE 通过降低加载压力，缩短平均 prefill 时间。",
+      "results.q5.cap.title": "Prefill 时间",
+      "results.q5.cap.desc": "不同方案的平均 prefill 时间对比。",
+      "results.q6.title": "06. 预取会影响精度吗？",
+      "results.q6.p": "<strong>可控。</strong> 通过评估不同预取策略对质量的影响，并结合重要性选择与替换，系统目标是在加速的同时保持几乎无损精度。",
+      "results.q6.s1.h": "预取下的质量表现",
+      "results.q6.s1.p": "预取能减少等待，但若路由变化可能加载“错误”的专家。对预取精度进行评估，有助于验证策略与真实专家使用保持一致。",
+      "results.q6.cap.title": "预取精度",
+      "results.q6.cap.desc": "不同预取策略对质量的影响。",
+
+      // citation / footer / actions
+      "citation.title": "引用",
+      "citation.subtitle": "如果本工作对你有帮助，欢迎引用。",
+      "actions.copy": "复制",
+      "actions.copied": "已复制",
+      "footer.blurb": "SMoE 项目主页：面向显存受限边缘硬件的重要性驱动专家调度。",
+      "footer.paper": "论文：",
+
+      // common
+      "common.imgUnavailable": "图片未加载。"
+    };
+
+    const i18nEls = Array.from(document.querySelectorAll('[data-i18n]'));
+    i18nEls.forEach(el => {
+      if (!el.dataset.i18nEn) el.dataset.i18nEn = el.innerHTML;
+    });
+
+    let currentLang = 'en';
+    function setLang(lang){
+      currentLang = lang === 'zh' ? 'zh' : 'en';
+      document.documentElement.lang = currentLang === 'zh' ? 'zh-CN' : 'en';
+
+      i18nEls.forEach(el => {
+        const key = el.dataset.i18n;
+        if (currentLang === 'zh') {
+          if (zh[key]) el.innerHTML = zh[key];
+        } else {
+          el.innerHTML = el.dataset.i18nEn || el.innerHTML;
+        }
+      });
+
+      const toggle = document.getElementById('langToggle');
+      if (toggle) toggle.textContent = currentLang === 'zh' ? 'EN' : '中文';
+
+      localStorage.setItem('lang', currentLang);
+    }
+
+    const saved = localStorage.getItem('lang');
+    const preferZh = (navigator.language || '').toLowerCase().startsWith('zh');
+    setLang(saved || (preferZh ? 'zh' : 'en'));
+
+    const toggle = document.getElementById('langToggle');
+    if (toggle) toggle.addEventListener('click', () => setLang(currentLang === 'zh' ? 'en' : 'zh'));
+
+    // Copy BibTeX (keeps icon)
     const btn = document.getElementById('copyBib');
     const bib = document.getElementById('bibtex');
-    if (btn && bib) {
+    const copyLabel = document.getElementById('copyBibLabel');
+    if (btn && bib && copyLabel) {
       btn.addEventListener('click', async () => {
         const text = bib.textContent || '';
+        const copiedText = currentLang === 'zh' ? (zh['actions.copied'] || '已复制') : 'Copied';
         try{
           await navigator.clipboard.writeText(text);
-          btn.textContent = 'Copied';
-          setTimeout(() => (btn.textContent = 'Copy'), 1100);
+          copyLabel.textContent = copiedText;
+          setTimeout(() => setLang(currentLang), 1100);
         }catch(e){
           const ta = document.createElement('textarea');
           ta.value = text;
@@ -1067,8 +1220,8 @@
           ta.select();
           document.execCommand('copy');
           ta.remove();
-          btn.textContent = 'Copied';
-          setTimeout(() => (btn.textContent = 'Copy'), 1100);
+          copyLabel.textContent = copiedText;
+          setTimeout(() => setLang(currentLang), 1100);
         }
       });
     }
