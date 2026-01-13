@@ -270,20 +270,6 @@
       font-size: 12px;
       color: var(--muted-2);
     }
-    .spark{
-      height: 54px;
-      margin-top: 12px;
-      border-radius: 12px;
-      border: 1px solid var(--stroke);
-      background:
-        linear-gradient(90deg, rgba(109,94,252,.0) 0%, rgba(109,94,252,.22) 22%, rgba(59,130,246,.22) 55%, rgba(16,185,129,.18) 100%),
-        radial-gradient(80px 40px at 15% 50%, rgba(109,94,252,.26), transparent 60%),
-        radial-gradient(80px 40px at 55% 50%, rgba(59,130,246,.22), transparent 60%),
-        radial-gradient(80px 40px at 85% 50%, rgba(16,185,129,.18), transparent 60%),
-        rgba(17,24,39,.02);
-      opacity: .95;
-    }
-
     /* Sections */
     section{ padding: 46px 0; }
     .section-head{
@@ -319,19 +305,6 @@
       padding: 18px;
     }
 
-    .abstract{
-      display: grid;
-      grid-template-columns: 1.2fr .8fr;
-      gap: 18px;
-      align-items: start;
-    }
-    .abstract p{
-      margin: 0;
-      color: rgba(17,24,39,.86);
-      font-family: var(--serif);
-      font-size: 16px;
-      text-align: justify;
-    }
     .bullets{
       display: grid;
       gap: 10px;
@@ -540,7 +513,6 @@
 
     @media (max-width: 980px){
       .hero-grid{ grid-template-columns: 1fr; }
-      .abstract{ grid-template-columns: 1fr; }
       .cta{ display: none; }
       .brand{ min-width: unset; }
     }
@@ -569,11 +541,10 @@
         </a>
 
         <nav class="nav" aria-label="Sections">
-          <a href="#abstract">Abstract</a>
+          <a href="#ascend">Ascend 910B</a>
           <a href="#motivation">Motivation</a>
           <a href="#method">Method</a>
           <a href="#results">Results</a>
-          <a href="#ascend">Ascend</a>
           <a href="#citation">Citation</a>
         </nav>
 
@@ -608,6 +579,53 @@
   <main id="top">
     <div class="container">
 
+      <section id="ascend" aria-label="Huawei Ascend 910B" style="padding-top: 18px; padding-bottom: 0;">
+        <div class="panel" style="margin-top: 0; background: linear-gradient(135deg, rgba(255,255,255,.92), rgba(240,248,255,.96)); border-color: rgba(109,94,252,.20);">
+          <div class="grid-3" style="grid-template-columns: 1.2fr .8fr; gap: 18px; align-items: center;">
+            <div>
+              <div style="display:inline-flex; align-items:center; gap:8px; margin-bottom:10px; color:#c00;">
+                <svg viewBox="0 0 24 24" fill="currentColor" style="width:18px;height:18px;">
+                  <path d="M12 2L2 7l10 5 10-5-10-5zm0 9l2.968 1.484L12 14l-2.968-1.516L12 11zm0 2.296l-5-2.5v5l5 2.5 5-2.5v-5l-5 2.5z"/>
+                </svg>
+                <strong style="font-size:13px; letter-spacing:.03em; text-transform:uppercase;">Ascend Ready</strong>
+              </div>
+              <h2 style="margin: 0 0 10px; font-size: 22px; letter-spacing: -0.02em;">Huawei Ascend 910B Support</h2>
+              <p style="margin: 0; color: var(--muted); font-family: var(--serif); line-height:1.7;">
+                SMoE can be deployed on Huawei Ascend platforms via <strong>CANN</strong>. The core idea remains unchanged: keep hot experts in device memory,
+                maximize reuse (hits + soft hits), and overlap compute with asynchronous transfers to minimize end-to-end latency.
+              </p>
+              <div style="margin-top: 12px; display:flex; gap: 12px; flex-wrap: wrap;">
+                <a class="btn primary" href="https://github.com/goingshr-debug/SMoE" target="_blank" rel="noreferrer" style="background:#c00; border-color:#c00; box-shadow: 0 10px 22px rgba(204,0,0,.18);">
+                  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M9 19c-3 1-3-2-4-2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+                    <path d="M15 19v-2.2c0-.7.2-1.2.6-1.6 2 .2 4-.5 4-4.2 0-1-.4-1.9-1-2.6.1-.3.5-1.2-.1-2.6 0 0-.8-.3-2.6 1a8.9 8.9 0 0 0-4.8 0c-1.8-1.3-2.6-1-2.6-1-.6 1.4-.2 2.3-.1 2.6-.6.7-1 1.6-1 2.6 0 3.7 2 4.4 4 4.2.3.3.5.7.6 1.2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M12 20c4 0 8-3 8-8a8 8 0 1 0-16 0c0 5 4 8 8 8z" stroke="currentColor" stroke-width="1.7" opacity=".35"/>
+                  </svg>
+                  SMoE Code (GitHub)
+                </a>
+                <a class="btn" href="#method">
+                  View Method
+                </a>
+              </div>
+            </div>
+            <div class="bullets">
+              <div class="bullet">
+                <strong>Ascend 910B (Da Vinci)</strong>
+                <span>High-throughput AI accelerator designed for large-scale training and inference.</span>
+              </div>
+              <div class="bullet">
+                <strong>HBM capacity & bandwidth</strong>
+                <span>Large HBM enables a bigger expert cache residency and fewer transfers.</span>
+              </div>
+              <div class="bullet">
+                <strong>CANN runtime</strong>
+                <span>Stream-based scheduling + async memcpy primitives to overlap compute and transfers.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <header class="hero">
         <div class="hero-grid">
           <div>
@@ -623,10 +641,6 @@
               with functionally similar experts already cached in GPU memory, reducing PCIe transfers and CPU computation to significantly improve decoding latency (TPOT).
             </p>
 
-            <div class="authors">
-              <strong>Guoying Zhu</strong>, Meng Li, Haipeng Dai, Xuechen Liu, Weijun Wang, Keran Li, Jun Xiao, Ligeng Chen, Wei Wang<br/>
-              <span>State Key Laboratory for Novel Software Technology, Nanjing University · (collabs: Tsinghua University, Honor Device)</span>
-            </div>
           </div>
 
           <aside class="hero-card" aria-label="Highlights">
@@ -642,54 +656,16 @@
                 <div class="k">Decoding latency</div>
                 <div class="v">-48%<small>TPOT</small></div>
                 <div class="hint">vs. SOTA baselines</div>
-                <div class="spark" aria-hidden="true"></div>
               </div>
               <div class="metric">
                 <div class="k">Cache hit rate</div>
                 <div class="v">≥60%<small>experts</small></div>
                 <div class="hint">with near-lossless accuracy</div>
-                <div class="spark" aria-hidden="true"></div>
               </div>
             </div>
           </aside>
         </div>
       </header>
-
-      <section id="abstract" aria-label="Abstract">
-        <div class="section-head">
-          <div>
-            <h2>Abstract</h2>
-            <p>MoE’s scaling benefits become an edge bottleneck under the “VRAM wall + PCIe transfer” constraint. We use importance-driven scheduling and substitution to keep inference on the GPU as much as possible.</p>
-          </div>
-        </div>
-        <div class="divider"></div>
-
-        <div class="panel abstract" style="margin-top: 16px;">
-          <div>
-            <p>
-              Mixture of Experts (MoE) scales large language models by activating only a small subset of experts per token. On consumer-grade edge hardware, however, limited VRAM forces frequent
-              expert movement between CPU and GPU, making PCIe transfers and CPU computation the dominant decoding bottlenecks. We propose <strong>Importance-Driven Expert Scheduling</strong>:
-              using expert importance scores to guide offloading, substituting low-importance activated experts with functionally similar experts already cached on the GPU, and improving reuse via
-              cache-aware scheduling. A fine-grained CPU–GPU pipeline further hides unavoidable loading costs. Experiments show up to a 48% reduction in decoding latency and an expert cache hit rate above 60%,
-              while preserving near-lossless accuracy.
-            </p>
-          </div>
-          <div class="bullets">
-            <div class="bullet">
-              <strong>Key observation</strong>
-              <span>Among activated experts, only a few have high scores (critical), while many have scores comparable to inactive experts and can be approximated by cached experts.</span>
-            </div>
-            <div class="bullet">
-              <strong>Core mechanism</strong>
-              <span>Turn low-score activations into “soft hits” via similarity-based substitution, reducing CPU-side compute and PCIe reads.</span>
-            </div>
-            <div class="bullet">
-              <strong>System design</strong>
-              <span>A fine-grained pipeline overlaps GPU computation with prefetching critical experts to keep compute units saturated.</span>
-            </div>
-          </div>
-        </div>
-      </section>
 
       <section id="motivation" aria-label="Motivation">
         <div class="section-head">
@@ -994,72 +970,6 @@
                 <span>Accuracy impact of prefetching policies.</span>
               </figcaption>
             </figure>
-          </div>
-        </div>
-      </section>
-
-      <section id="ascend" aria-label="Huawei Ascend Deployment">
-        <div class="section-head">
-          <div>
-            <h2>Huawei Ascend (昇腾) Ready</h2>
-            <p>Run SMoE on Ascend via CANN — preserving the same cache + pipeline advantages.</p>
-          </div>
-        </div>
-        <div class="divider"></div>
-
-        <div class="panel" style="margin-top: 16px;">
-          <div class="grid-3" style="grid-template-columns: 1.2fr .8fr; gap: 16px;">
-            <div>
-              <h3 style="margin: 0 0 10px; font-size: 18px;">Run SMoE on Ascend via CANN</h3>
-              <p style="margin: 0; color: var(--muted); font-family: var(--serif);">
-                The SMoE system design is hardware-agnostic: it relies on (1) importance-aware routing decisions, (2) expert cache management,
-                and (3) overlapping compute with asynchronous transfers. This maps naturally to the Huawei Ascend software stack via
-                <strong>CANN</strong> (Compute Architecture for Neural Networks): replace CUDA streams/memcpy with Ascend streams and async memcpy primitives,
-                and keep expert weights in device memory with a cache policy identical to the GPU version.
-              </p>
-              <div style="margin-top: 12px;">
-                <a class="btn primary" href="https://github.com/goingshr-debug/SMoE" target="_blank" rel="noreferrer">
-                  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                    <path d="M9 19c-3 1-3-2-4-2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
-                    <path d="M15 19v-2.2c0-.7.2-1.2.6-1.6 2 .2 4-.5 4-4.2 0-1-.4-1.9-1-2.6.1-.3.5-1.2-.1-2.6 0 0-.8-.3-2.6 1a8.9 8.9 0 0 0-4.8 0c-1.8-1.3-2.6-1-2.6-1-.6 1.4-.2 2.3-.1 2.6-.6.7-1 1.6-1 2.6 0 3.7 2 4.4 4 4.2.3.3.5.7.6 1.2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M12 20c4 0 8-3 8-8a8 8 0 1 0-16 0c0 5 4 8 8 8z" stroke="currentColor" stroke-width="1.7" opacity=".35"/>
-                  </svg>
-                  SMoE Code (GitHub)
-                </a>
-              </div>
-              <div style="margin-top: 12px; display: grid; gap: 10px;">
-                <div class="bullet">
-                  <strong>Backend</strong>
-                  <span>Use CANN runtime to schedule compute streams and asynchronous host↔device transfers.</span>
-                </div>
-                <div class="bullet">
-                  <strong>Cache</strong>
-                  <span>Keep hot experts pinned in HBM; treat substitutions as cache hits to reduce transfers.</span>
-                </div>
-                <div class="bullet">
-                  <strong>Pipeline</strong>
-                  <span>Overlap expert compute with prefetch of critical experts, preserving low TPOT under low batch.</span>
-                </div>
-              </div>
-            </div>
-            <div class="card" style="margin: 0;">
-              <div class="tag">
-                <span class="pill" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none">
-                    <path d="M12 2l3 7 7 3-7 3-3 7-3-7-7-3 7-3 3-7z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
-                  </svg>
-                </span>
-                <span>Production</span>
-              </div>
-              <h3 style="margin-top: 4px;">What you get</h3>
-              <p style="margin-top: 6px;">
-                <strong>Ascend-ready deployment</strong> to bring SMoE-style expert scheduling to domestic edge AI infrastructure while preserving core benefits:
-                lower PCIe/transfer overhead, higher cache reuse, and faster decoding.
-              </p>
-              <div style="margin-top: 12px; color: var(--muted-2); font-size: 12px;">
-                Ascend + CANN support enables domestic edge AI deployments without changing SMoE’s core scheduling logic.
-              </div>
-            </div>
           </div>
         </div>
       </section>
